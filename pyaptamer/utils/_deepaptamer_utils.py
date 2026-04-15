@@ -3,7 +3,8 @@ __all__ = ["ohe", "pad_sequence", "run_deepdna_prediction", "remove_na"]
 
 
 import numpy as np
-from deepDNAshape import predictor
+
+from pyaptamer.deepdnashape import Predictor
 
 
 def ohe(seq):
@@ -66,7 +67,7 @@ def pad_sequence(seq, seq_len=35):
     return seq.ljust(seq_len, "N")
 
 
-def run_deepdna_prediction(seq, mode="cpu"):
+def run_deepdna_prediction(seq):
     """
     Run deepDNAshape prediction for all DNA structural features (MGW, HelT, ProT, Roll)
     on a single DNA sequence.
@@ -81,8 +82,6 @@ def run_deepdna_prediction(seq, mode="cpu"):
     ----------
     seq : str
         DNA sequence (e.g., "AAGGTTCC") to predict structural features for.
-    mode : {"cpu", "gpu"}, optional
-        Compute mode for the predictor. Default is "cpu".
 
     Returns
     -------
@@ -94,7 +93,7 @@ def run_deepdna_prediction(seq, mode="cpu"):
     # Always use layer 2 (sliding window of 5)
     layer = 2
 
-    model = predictor.predictor(mode=mode)
+    model = Predictor()
     features = ["MGW", "HelT", "ProT", "Roll"]
 
     results = [model.predict(feat, seq, layer).tolist() for feat in features]
